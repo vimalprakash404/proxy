@@ -1,19 +1,17 @@
 import { createProxyMiddleware } from "http-proxy-middleware";
-import { createServer } from "@vercel/node";
 
-// Target backend server (can be EC2, localhost, etc.)
+// Backend server (your EC2 or other API)
 const target = process.env.TARGET_URL || "http://localhost:5000";
 
-// Create proxy
 const proxy = createProxyMiddleware({
   target,
   changeOrigin: true,
   pathRewrite: {
-    "^/api": "", // remove /api before forwarding
+    "^/api": "", // remove `/api` before forwarding
   },
 });
 
-// Export Vercel serverless handler
+// Vercel handler
 export default function handler(req, res) {
   return proxy(req, res, (err) => {
     if (err) {
